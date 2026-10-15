@@ -2,6 +2,16 @@
 
 Radventure Application for multipurpose usage;
 
+## [3.0] (34) (2026-09-12)
+- Rebuilt the app for the free Firebase Spark plan (September 2026 rebuild).
+- Replaced the unavailable school Exchange login with email and password accounts.
+- Moved shared team gameplay to Firestore transactions and security rules, with timestamped answer receipts and no Cloud Functions.
+- Added organizer tools for course import and live device verification.
+- Moved dependencies from CocoaPods to Swift Package Manager and removed obsolete CocoaPods and Functions artifacts.
+- Kept the Radventure project name and bundle identity so it ships as an update to the existing app.
+
+Entries for 2.x and earlier are legacy (the 2023 Radventure releases).
+
 ## [2.0.0] (1) (2023-08-30)
 - Ver. 2.0.0 buid is ready for testing.
 - Added team synchronization.
