@@ -87,7 +87,8 @@ backend/                 Organizer scripts, validation helpers and Spark rules t
 firebase.json            Firestore rules/indexes and emulator ports
 firestore.spark.rules    Firestore security rules
 firestore.indexes.json   Firestore indexes
-docs/                    Operations notes; docs/assets holds README images
+docs/                    Operations notes
+design-assets/           Brand banner (banner/) and README screenshots (screenshots/)
 Images/                  Launch screen logo
 CHANGELOG.md             Release history
 ```
@@ -111,15 +112,15 @@ The app is built, signed and archived from Xcode. Firestore rules and indexes ar
 These screenshots show the original 2023 release with the school login; the current login and team flow differ.
 
 <p align="center">
-  <img src="docs/assets/screenshot-login.png" alt="Original school login" width="250">
-  <img src="docs/assets/screenshot-map.png" alt="Original campus map" width="250">
-  <img src="docs/assets/screenshot-checkpoint.png" alt="Original checkpoint question" width="250">
+  <img src="design-assets/screenshots/screenshot-login.png" alt="Original school login" width="250">
+  <img src="design-assets/screenshots/screenshot-map.png" alt="Original campus map" width="250">
+  <img src="design-assets/screenshots/screenshot-checkpoint.png" alt="Original checkpoint question" width="250">
 </p>
 
 <p align="center">
-  <img src="docs/assets/screenshot-scoreboard.png" alt="Original scoreboard" width="250">
-  <img src="docs/assets/screenshot-force-quit.png" alt="Original administrator prompt" width="250">
-  <img src="docs/assets/screenshot-rules.png" alt="Original rules screen" width="250">
+  <img src="design-assets/screenshots/screenshot-scoreboard.png" alt="Original scoreboard" width="250">
+  <img src="design-assets/screenshots/screenshot-force-quit.png" alt="Original administrator prompt" width="250">
+  <img src="design-assets/screenshots/screenshot-rules.png" alt="Original rules screen" width="250">
 </p>
 
 ## Known limitations
