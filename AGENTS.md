@@ -19,7 +19,7 @@ Deeper docs: `README.md` (overview, setup) and `docs/OPERATIONS.md` (emulators, 
 
 ## Commands
 
-Backend (Node 22, run from anywhere):
+Backend (Node 22, run from the repo root, or prefix every path with `/Users/canduru04/Developer/ios/robert-compass`):
 
 ```sh
 npm --prefix backend ci
@@ -33,7 +33,7 @@ node backend/scripts/prepare-ui.js    # UI-test fixtures (emulator only)
 
 Emulators bind 127.0.0.1: Auth 9099, Firestore 8080, UI 4000. Integration tests need Java 21+.
 
-iOS: open `Radventure.xcodeproj`. Schemes: `Radventure` and `Radventure Local` (passes Debug-only `--emulator`). The full simulator `xcodebuild ... test` invocation (derived-data paths, `CODE_SIGN_IDENTITY=-`, location setup via `xcrun simctl`) is in `docs/OPERATIONS.md#local-backend-and-tests`. Use ad hoc signing: `CODE_SIGNING_ALLOWED=NO` breaks Firebase Auth's simulator keychain access.
+iOS: open `Radventure.xcodeproj`. Schemes: `Radventure` and `Radventure Local` (passes Debug-only `--emulator`). The full simulator `xcodebuild ... test` invocation (derived-data paths, `CODE_SIGN_IDENTITY=-`, location setup via `xcrun simctl`) is in `docs/OPERATIONS.md#local-backend-and-tests`. Use ad hoc signing: `CODE_SIGNING_ALLOWED=NO` breaks Firebase Auth's simulator keychain access. If `xcodebuild` fails with "already exists in file system", another session is resolving the same Firebase binaries: wait and retry once, or pass `-clonedSourcePackagesDirPath` under `build/` as in `docs/OPERATIONS.md`; never clear `~/Library/Caches/org.swift.swiftpm`.
 
 Deploy (live, owner only, do not run without explicit instruction): rules/indexes via `backend/node_modules/.bin/firebase deploy --config firebase.json --project robert-compass --only firestore:rules,firestore:indexes` (with `XDG_CONFIG_HOME` pointing at `build/firebase-cli`, see OPERATIONS.md); app via Xcode archive. There is no CI.
 
@@ -50,11 +50,12 @@ Deploy (live, owner only, do not run without explicit instruction): rules/indexe
 - After Firestore App Check enforcement, `live-smoke.js` is no longer the live check; use the signed iPhone app. Physical-device test procedure is in `docs/OPERATIONS.md#repeating-the-device-test`.
 - Conventions: Swift user-facing errors via `GameWriteError("...")` and UI state on `@MainActor`; backend JS is ES modules validating with `ensure(condition, code, message)` from `src/domain.js`.
 
-## Validation placement and reuse (owner update 2026-10-26)
+## Validation
 
-- Follow the global Claude/Codex test policy and `~/Developer/personal/mac-mini/validation-economy/README.md` and `COVERAGE.md`. Focus first; full coverage only when the changed inputs require it. Docs-only policy edits need no application suite or deploy.
-- Use `~/Developer/personal/mac-mini/validation-economy/remote-run.py` for every check that can run on Linux (owner rule 2026-10-27: "all the things that we can run on pc must be on pc"): tests, lint, typecheck, Node and web checks. The Mini keeps only what needs macOS or a device, each such chunk with its reason written in the gate map; this repo wires the route in its own gate, and Linux-capable work left on the Mini is a bug to fix here. It defaults to `gaming-pc` and handles connection and bounded Wake-on-LAN automatically; call it directly without a separate online check or asking the owner each time. Match the pinned runtime and locked dependencies, bound actual workers, and preserve repo data-export restrictions. Never export credentials, production data, signing keys or uncommitted work.
-- The PC pool shares eight CPU slots and 24 GiB across isolated jobs with zero test swap; retain automatic job cleanup, the 8 GiB package-cache budget and 128 GiB virtual-disk cap. Brain is an explicit secondary route (`--runner brain`) when compatible, capped at two CPUs and 4 GiB together. If the PC remains unavailable after bounded wake/connect, report the blocker; never silently start the same work on the Mini or replay an uncertain submitted job.
-- Xcode, Swift, simulator, signing and device checks stay on the Mini. The PC Linux runner has no Apple toolchain; only compatible ancillary Python/Node checks are eligible.
-- For work that must run on the Mini: manual heavy commands use `repo-run.py --repo <absolute checkout> --profile <profile> -- <command>` from the shared helper; choose from native for the actual tool. Tiny syntax checks need no reservation. Bound tool workers and reserve separate heavy phases.
-- Reuse only supported receipts with matching source, coverage, dependencies, runtime/platform and relevant environment. Preserve passed unaffected batches; count remote results only when the owning gate aggregates them. Receipts do not replace required build artifacts or OS/device/browser proof. Split or offload an impossible reservation instead of waiting indefinitely; only stop your own obsolete jobs. Existing gates need explicit remote routing and matching-result aggregation; this instruction does not automatically move unintegrated commands.
+Global "Tests, CI and deploy" rules apply. Chunk map, with the reason for every Mini chunk:
+
+- Backend `npm ci`, `npm run check` and `npm test` (domain unit tests): PC via `remote-run.py --runtime node --cwd backend --prepare-json '["npm","ci"]' -- npm test` (Node 22 image matches `engines`; the prepare step may only be a bare `npm ci`, so use `--cwd backend`). Committed source only. Verified 2026-10-27: 3 tests pass in about 30 s of run time.
+- Rules integration tests (`test:integration`): Mini until a Java 21 plus Firebase emulator PC image is confirmed with `remote-run.py --plan`; reason: the emulators need Java 21+.
+- Xcode build and test, simulator, App Attest and physical-device tests, live Firebase deploys: Mini or owner device only (Apple toolchain, device, live credentials).
+- Simulator: `robert-compass-17` (create once with `xcrun simctl create`, never borrow `krystal-17` or `nar-17`); shut it down when the task ends.
+- DerivedData: Xcode and simulator runs follow `docs/OPERATIONS.md`, which keeps DerivedData and SourcePackages under ignored `build/`.
