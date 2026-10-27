@@ -141,4 +141,4 @@ MIT. See [LICENSE](LICENSE). Release history is in [CHANGELOG.md](CHANGELOG.md).
 
 ## Author
 
-Can Duru — [canduru.net](https://canduru.net)
+Can Duru, [canduru.net](https://canduru.net)
