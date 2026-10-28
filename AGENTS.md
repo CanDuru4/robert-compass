@@ -25,6 +25,7 @@ Backend (Node 22, run from the repo root, or prefix every path with `/Users/cand
 npm --prefix backend ci
 npm --prefix backend run check        # node --check on sources/scripts
 npm --prefix backend test             # domain unit tests, no deps needed
+scripts/check.sh [--full]             # gate: ci --ignore-scripts, check, test; ends ALL CHECKS PASSED at <sha>; never builds Xcode
 backend/node_modules/.bin/firebase emulators:start --config firebase.json --project demo-robert-compass
 FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 npm --prefix backend run test:integration
 node backend/scripts/seed.js          # no args: seeds only the local demo emulator
