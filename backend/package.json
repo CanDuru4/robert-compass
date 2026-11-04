@@ -28,6 +28,7 @@
     },
     "basic-ftp": "^6.2.1",
     "@grpc/grpc-js": "^1.14.6",
-    "@opentelemetry/core": "^2.8.0"
+    "@opentelemetry/core": "^2.8.0",
+    "glob": "^14.0.2"
   }
 }
