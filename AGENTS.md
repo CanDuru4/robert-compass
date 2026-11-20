@@ -15,7 +15,8 @@ Deeper docs: `README.md` (overview, setup) and `docs/OPERATIONS.md` (emulators, 
 - `RadventureTests/` - model/deadline unit tests plus two opt-in physical-device tests (`testLiveGameplayOnPhysicalDevice`, `testLiveAppAttestOnPhysicalDevice`). `RadventureUITests/` - setup-screen and full team-activity scenarios.
 - `firestore.spark.rules`, `firestore.indexes.json`, `firebase.json` - the whole server side. There are no Cloud Functions.
 - `backend/` - `src/domain.js` (pure validation/normalization helpers), `scripts/` (`seed.js`, `prepare-ui.js`, `live-smoke.js`, `device-fixture.js`, `owner-credentials.js`), `test/domain.test.js` (unit), `test/spark.test.js` (rules tests, needs emulators).
-- `Extra Files/`, `build/`, `courses/*.private.json` - git-ignored local-only folders (App Store assets; CLI auth and verification evidence; course answers).
+- `Extra Files/`, `build/` (created by the `docs/OPERATIONS.md` workflows, absent on a fresh checkout), `courses/*.private.json` - git-ignored local-only paths (App Store assets; CLI auth and verification evidence; course answers).
+- `Images/` holds the launch logo; `design-assets/` the README banner and screenshots.
 
 ## Commands
 
@@ -45,7 +46,7 @@ Deploy (live, owner only, do not run without explicit instruction): rules/indexe
 - Every client write must be a transaction that `firestore.spark.rules` validates (exact score delta, completed checkpoint, leaderboard projection together via `getAfter()`). A change to a write in `FirebaseGameService.swift` almost always needs a matching rules change and a `backend/test/spark.test.js` case.
 - Answers and entry-code hashes live only in server-only `privateGames`; clients must never be able to read them. Trusted time comes from server timestamps, not the device clock.
 - Never commit `FirebaseConfig.plist`, `GoogleService-Info.plist`, `Keys.plist`, `courses/*.private.json` (live course answers), service-account keys, or CLI tokens. `Backend.configure()` rejects the retired `radventure-robert` project and configs for other bundle IDs; keep that guard.
-- Do not delete the ignored `build/` folder wholesale: it holds local Firebase CLI authorization (`build/firebase-cli`) and verification evidence.
+- Never delete `build/` wholesale when it exists: it holds local Firebase CLI authorization (`build/firebase-cli`) and verification evidence.
 - CocoaPods is gone; do not run `pod install` or reintroduce `Pods/`. Firebase Apple SDK is pinned to an exact version (12.19.1) in SwiftPM.
 - Emulator/demo options in `Backend.swift` are `#if DEBUG` only; Release ignores `--emulator` and `--unconfigured`.
 - After Firestore App Check enforcement, `live-smoke.js` is no longer the live check; use the signed iPhone app. Physical-device test procedure is in `docs/OPERATIONS.md#repeating-the-device-test`.
